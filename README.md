@@ -14,7 +14,7 @@ g++ -std=c++17 lectureN.cpp
 ### Build & Run
 ```bash
 cd assignmentN
-make clean && make && make run
+make run
 ```
 
 ### Debug

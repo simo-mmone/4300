@@ -137,6 +137,11 @@ void Game::spawnSmallEnemies(std::shared_ptr<Entity> e)
 
 }
 
+void Game::spawnSpecialWeapon(std::shared_ptr<Entity> entity)
+{
+    // TODO
+}
+
 void Game::sRender()
 {
     m_window.clear();
@@ -244,7 +249,13 @@ void Game::sUserInput()
 
 void Game::sCollision()
 {
-
+    for (auto b : m_entities.getEntities("bullet"))
+    {
+        for (auto e : m_entities.getEntities("enemy"))
+        {
+            // TODO collisions
+        }
+    }
 }
 
 void Game::sEnemySpawner()
