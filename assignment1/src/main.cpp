@@ -80,7 +80,7 @@ int main(int argc, char * argv[])
 
     std::vector<std::shared_ptr<MyShape>> myShapes;
 
-    std::ifstream fin("bin/config.txt");
+    std::ifstream fin("assets/config.txt");
     std::string instruction;
     std::cout << "Reading config file...\n";
     while (fin >> instruction)

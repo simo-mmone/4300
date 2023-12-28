@@ -1,11 +1,21 @@
-### Lecture 2 & 3
+# 4300
+
+## Lectures
+
+### Build & Run
 ```bash
-g++ -std=c++17 lecture2.cpp -o lecturecode
+cd lectures
+g++ -std=c++17 lectureN.cpp
+./a.out
 ```
-### Lecture 4
+
+## Assignments
+
+### Build & Run
 ```bash
-g++ src/*.cpp -Isrc -std=c++17 -o bin/sfmlgame -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
-cd bin
-./sfmlgame
+cd assignmentN
+make clean && make && make run
 ```
-run with `run.sh` script using `./run.sh` 
+
+### Debug
+debug with "Run with Debug" in vscode on main.cpp file

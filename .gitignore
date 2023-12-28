@@ -1,2 +1,4 @@
-lecturecode
-bin/sfmlgame
+# compiled stuff
+lectures/a.out
+assignment1/bin
+assignment2/bin
