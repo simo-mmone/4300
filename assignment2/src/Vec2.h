@@ -25,4 +25,5 @@ public:
     float dist(const Vec2 &rhs) const;
     float length() const;
     void normalize();
+    Vec2 collisionBounce(const Vec2 &rhs) const;
 };

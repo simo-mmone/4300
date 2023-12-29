@@ -16,9 +16,10 @@ $(OUTPUT): $(OBJ_FILES) Makefile
 	$(CXX) $(OBJ_FILES) $(LDFLAGS) -o ./bin/$@
 
 .cpp.o:
-	$(CXX) $(CXX_FLAGS) $(INCLUDES) $< -o $@
+	$(CXX) $(CXX_FLAGS) $(INCLUDES) $< -c -o $@
 
 clean:
+	rm -f $(OBJ_FILES)
 	rm -f $(OBJ_SFMLGAME) ./bin/sfmlgame
 
 run: $(OUTPUT)

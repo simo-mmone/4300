@@ -29,6 +29,7 @@ class Game
     bool m_paused = false;
     /// @brief whether the game is running
     bool m_running = true;
+    Vec2 m_lastShootPos = Vec2(0,0);
 
     std::shared_ptr<Entity> m_player;
 
@@ -50,6 +51,8 @@ class Game
     void sEnemySpawner();
     /// @brief System: Collisions
     void sCollision();
+    /// @brief System: Shoot
+    void sShoot();
 
     void spawnPlayer();
     void spawnEnemy();
