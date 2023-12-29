@@ -59,6 +59,8 @@ class Game
     void spawnSmallEnemies(std::shared_ptr<Entity> entity);
     void spawnBullet(std::shared_ptr<Entity> entity, const Vec2 & mousePos);
     void spawnSpecialWeapon(std::shared_ptr<Entity> entity);
+    bool IsColliding(const Vec2 & pos1, const Vec2 & pos2, const std::string & tag1, const std:: string & tag2);
+    int tagToRadius(const std::string & tag);
 
 public:
 

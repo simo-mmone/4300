@@ -82,13 +82,13 @@ void Game::run()
     {
 
         m_entities.update();
+        sUserInput();
 
         if (!m_paused)
         {
             sEnemySpawner();
             sMovement();
             sCollision();
-            sUserInput();
             sLifespan();
             sShoot();
         }
@@ -129,7 +129,6 @@ void Game::spawnPlayer()
 /// @brief spawn an enemy at a random position
 void Game::spawnEnemy()
 {
-    // TODO: properly spawn enemy
     auto entity = m_entities.addEntity("enemy");
 
     float shapeRadius = m_enemyConfig.SR;
@@ -147,8 +146,33 @@ void Game::spawnEnemy()
     int xRange = m_window.getSize().x - (shapeRadius * 2);
     int yRange = m_window.getSize().y - (shapeRadius * 2);
 
-    float ex = (rand() % xRange) + shapeRadius;
-    float ey = (rand() % yRange) + shapeRadius;
+    float ex, ey;
+    int maxRetries = 10000;
+    int retries = 0;
+    bool isColliding = false;
+
+    // ex = (rand() % xRange) + shapeRadius;
+    // ey = (rand() % yRange) + shapeRadius;
+
+    do
+    {
+        ex = (rand() % xRange) + shapeRadius;
+        ey = (rand() % yRange) + shapeRadius;
+
+        for (auto e : m_entities.getEntities())
+        {
+            if (IsColliding(Vec2(ex, ey), e->cTransform->pos, e->tag(), "enemy"))
+            {
+                isColliding = true;
+                break;
+            }
+        }
+
+        if (++retries > maxRetries)
+        {
+            isColliding = false; // give up
+        }
+    } while (isColliding);    
 
     int shapePointsRange = m_enemyConfig.VMAX - m_enemyConfig.VMIN;
     int shapePoints = m_enemyConfig.VMIN;
@@ -158,9 +182,14 @@ void Game::spawnEnemy()
     }
 
     auto outlineColor = sf::Color(m_enemyConfig.OR, m_enemyConfig.OG, m_enemyConfig.OB);
+    auto randomColor = sf::Color(
+        rand() % 255,
+        rand() % 255,
+        rand() % 255
+    );
 
     entity->cTransform = std::make_shared<CTransform>(Vec2(ex, ey), randDirection * shapeSpeed, 0.0f);
-    entity->cShape = std::make_shared<CShape>(shapeRadius, shapePoints, sf::Color(0, 0, 0, 0), outlineColor, m_enemyConfig.OT);
+    entity->cShape = std::make_shared<CShape>(shapeRadius, shapePoints, randomColor, outlineColor, m_enemyConfig.OT);
     entity->cScore = std::make_shared<CScore>(shapePoints * 100);
 
     m_lastEnemySpawnTime = m_currentFrame;
@@ -264,6 +293,12 @@ void Game::sUserInput()
             case sf::Keyboard::D:
                 m_player->cInput->right = true;
                 break;
+            case sf::Keyboard::P:
+                setPaused(!m_paused);
+                break;
+            case sf::Keyboard::Escape:
+                m_running = false;
+                break;
             
             default:
                 break;
@@ -308,13 +343,30 @@ void Game::sUserInput()
     }
 }
 
-bool IsColliding(const std::shared_ptr<Entity> & e1, const std::shared_ptr<Entity> & e2)
+int Game::tagToRadius(const std::string & tag)
 {
-    auto r1 = e1->cShape->circle.getRadius();
-    auto r2 = e2->cShape->circle.getRadius();
+    if (tag == "player")
+    {
+        return m_playerConfig.CR;
+    }
+    else if (tag == "enemy")
+    {
+        return m_enemyConfig.CR;
+    }
+    else if (tag == "bullet")
+    {
+        return m_bulletConfig.CR;
+    }
+    return 0;    
+}
 
-    float xDistance = e1->cTransform->pos.x - e2->cTransform->pos.x;
-    float yDistance = e1->cTransform->pos.y - e2->cTransform->pos.y;
+bool Game::IsColliding(const Vec2 & pos1, const Vec2 & pos2, const std::string & tag1, const std:: string & tag2)
+{
+    int r1 = tagToRadius(tag1);
+    int r2 = tagToRadius(tag2);
+
+    float xDistance = pos1.x - pos2.x;
+    float yDistance = pos1.y - pos2.y;
 
     float dist2 = xDistance * xDistance + yDistance * yDistance;
     float radius2 = (r1 + r2) * (r1 + r2);
@@ -360,7 +412,7 @@ void Game::sCollision()
     {
         for (auto e : m_entities.getEntities("enemy"))
         {
-            if (!IsColliding(b, e))
+            if (!IsColliding(b->cTransform->pos, e->cTransform->pos, b->tag(), e->tag()))
             {
                 continue;
             }
@@ -383,7 +435,7 @@ void Game::sCollision()
         for (size_t j = (i + 1); j < entities.size(); j++)
         {
             auto x = entities[j];
-            if (IsColliding(e, x))
+            if (IsColliding(e->cTransform->pos, x->cTransform->pos, e->tag(), x->tag()))
             {
                 std::array<Vec2, 2> collisionResult = collisionBounce(
                     e->cTransform->pos,
@@ -391,14 +443,18 @@ void Game::sCollision()
                     e->cTransform->velocity,
                     x->cTransform->velocity
                 );
-                
+
                 e->cTransform->velocity = collisionResult[1];
                 x->cTransform->velocity = collisionResult[0];
+
+                // move 1 frame forward
+                e->cTransform->pos += e->cTransform->velocity;
+                x->cTransform->pos += x->cTransform->velocity;
             }
         }
         i++;
 
-        if (!IsColliding(e, m_player))
+        if (!IsColliding(e->cTransform->pos, m_player->cTransform->pos, e->tag(), m_player->tag()))
         {
             continue;
         }
@@ -412,7 +468,7 @@ void Game::sCollision()
 
 void Game::sEnemySpawner()
 {
-    if (m_currentFrame - m_lastEnemySpawnTime > 120)
+    if (m_currentFrame - m_lastEnemySpawnTime > m_enemyConfig.SI)
     {
         spawnEnemy();
     }
