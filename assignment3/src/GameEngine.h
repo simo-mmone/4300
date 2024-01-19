@@ -37,4 +37,4 @@ public:
     sf::RenderWindow & window();
     const Assets& assets() const;
     bool isRunning();
-}
+};

@@ -27,4 +27,4 @@ public:
 
     Scene_Menu(GameEngine * gameEngine = nullptr);
     void sRender();
-}
+};

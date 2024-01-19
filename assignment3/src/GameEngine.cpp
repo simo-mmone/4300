@@ -50,20 +50,20 @@ void GameEngine::sUserInput()
     {
         if (event.type == sf::Event::KeyPressed)
         {
-            if (event.key.code == sf::Keyboard::x)
+            if (event.key.code == sf::Keyboard::X)
             {
                 std::cout << "screenshot saved to " << "test.png" << std::endl;
                 sf::Texture texture;
                 texture.create(m_window.getSize().x, m_window.getSize().y);
                 texture.update(m_window);
-                if (texture.copyToImage().ssaveToFile(test.png))
+                if (texture.copyToImage().saveToFile("test.png"))
                 {
                     std::cout << "screenshot saved to " << "test.png" << std::endl;
                 }
             }
         }
 
-        if (event.type == sf::event::KeyPressed || event.type == sf::Event::KeyReleased)
+        if (event.type == sf::Event::KeyPressed || event.type == sf::Event::KeyReleased)
         {
             // if the current scene does not have an action associated with this key, skip the event
             if (currentScene()->getActionMap().find(event.key.code) == currentScene()->getActionMap().end())

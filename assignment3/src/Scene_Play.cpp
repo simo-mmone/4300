@@ -217,9 +217,9 @@ void Scene_Play::sRender()
     }
 
     // draw all Entity collisions bounding boxes with a rectangleshape
-    if (m_drawCollision)
+    if (m_drawCollisions)
     {
-        for (auto e : m_entityManager.getentities())
+        for (auto e : m_entityManager.getEntities())
         {
             if (e->hasComponent<CBoundingBox>())
             {
@@ -242,7 +242,7 @@ void Scene_Play::sRender()
     {
         float leftX = m_game->window().getView().getCenter().x - width() / 2;
         float rightX = leftX + width() + m_gridSize.x;
-        float nextGridX = left - ((int)leftX % (int)m_gridSize.x);
+        float nextGridX = leftX - ((int)leftX % (int)m_gridSize.x);
 
         for (float x = nextGridX; x < rightX; x += m_gridSize.x)
         {
@@ -252,15 +252,14 @@ void Scene_Play::sRender()
         for (float y = 0; y < height(); y += m_gridSize.y)
         {
             drawLine(Vec2(leftX, height() - y), Vec2(rightX, height() - y));
-        }
-
-        for (float x = nextGridX; x < rightX; x += m_gridSize.x)
-        {
-            std::string xCell = std::to_string((int)x / (int)m_gridSize.x);
-            std::string yCell = std::to_string((int)y / (int)m_gridSize.y);
-            m_gridText.setString("(" + xCell + "," + yCell + ")");
-            m_gridText.setPosition(x + 3, height() - y - m_gridSize + 2);
-            m_game->window().draw(m_gridText);
-        }
+            for (float x = nextGridX; x < rightX; x += m_gridSize.x)
+            {
+                std::string xCell = std::to_string((int)x / (int)m_gridSize.x);
+                std::string yCell = std::to_string((int)y / (int)m_gridSize.y);
+                m_gridText.setString("(" + xCell + "," + yCell + ")");
+                m_gridText.setPosition(x + 3, height() - y - m_gridSize.y + 2);
+                m_game->window().draw(m_gridText);
+            }
+        }        
     }
 }

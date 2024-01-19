@@ -21,7 +21,7 @@ public:
     CTransform() {}
     CTransform(const Vec2 & p)
         : pos(p) {}
-    CTransform(const Vec2 & p, cont Vec2 & sp, const Vec2 & sc, float a)
+    CTransform(const Vec2 & p, const Vec2 & sp, const Vec2 & sc, float a)
         : pos(p), prevPos(p), velocity(sp), scale(sc), angle(a) {}
         
 };
@@ -84,4 +84,14 @@ public:
     std::string state = "jumping";
     CState() {}
     CState(const std::string & s) : state(s) {}
+};
+
+class CLifespan : public Component
+{
+public:
+    int total = 0;
+    int remaining = 0;
+    CLifespan() {}
+    CLifespan(int t, int r)
+        : total(t), remaining(r) {}
 };
