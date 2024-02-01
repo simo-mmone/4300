@@ -17,6 +17,7 @@ protected:
     GameEngine * m_game = nullptr;
     EntityManager m_entityManager;
     ActionMap m_actionMap;
+    ActionMap m_actionMapMouse;
     bool m_paused = false;
     bool m_hasEnded = false;
     size_t m_currentFrame = 0;
@@ -31,11 +32,14 @@ public:
 
     virtual void update() = 0;
     virtual void sDoAction(const Action & action) = 0;
+    virtual void sDoActionMouse(const Action & action, const Vec2 & pos) = 0;
     virtual void sRender() = 0;
 
     virtual void doAction(const Action & action);
+    virtual void doActionMouse(const Action & action, const Vec2 & pos);
     void simulate(const size_t frames);
     void registerAction(int inputkey, const std::string & actionName);
+    void registerActionMouse(int input, const std::string & actionName);
 
     size_t width() const;
     size_t height() const;
@@ -43,5 +47,6 @@ public:
 
     bool hasEnded() const;
     const ActionMap & getActionMap() const;
+    const ActionMap & getActionMapMouse() const;
     void drawLine(const Vec2 & p1, const Vec2 & p2);
 };

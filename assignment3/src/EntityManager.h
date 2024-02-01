@@ -6,12 +6,13 @@
 #include <map>
 
 typedef std::vector<std::shared_ptr<Entity>> EntityVec;
+typedef std::map<std::string, EntityVec> EntityMap;
 
 class EntityManager
 {
     EntityVec m_entities; // all entities
     EntityVec m_entitiesToAdd; // antities to add next update
-    std::map<std::string, EntityVec> m_entityMap; // map from entity tag to vectors
+    EntityMap m_entityMap; // map from entity tag to vectors
     size_t m_totalEntities = 0; // total entities created
 
     // helper funzion to avoid repeated code
@@ -26,4 +27,5 @@ public:
 
     const EntityVec & getEntities();
     const EntityVec & getEntities(const std::string & tag);
+	const EntityMap & getEntityMap(); // not in all projects
 };

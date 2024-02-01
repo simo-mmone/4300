@@ -77,10 +77,53 @@ void GameEngine::sUserInput()
             // look up the action and send the action to the scene
             currentScene()->doAction(Action(currentScene()->getActionMap().at(event.key.code), actionType));
         }
+
+        if (event.type == sf::Event::MouseButtonPressed || event.type == sf::Event::MouseButtonReleased)
+        {
+            // if the current scene does not have an action associated with this key, skip the event
+            if (currentScene()->getActionMapMouse().find(event.key.code) == currentScene()->getActionMapMouse().end())
+            {
+                continue;
+            }
+
+            // determine start or end action by whether it was key pres or release
+            const std::string actionType = (event.type == sf::Event::MouseButtonPressed) ? "START" : "END";
+
+            auto mousePos = sf::Mouse::getPosition(m_window);
+            // look up the action and send the action to the scene
+            currentScene()->doActionMouse(
+                Action(currentScene()->getActionMapMouse().at(event.key.code), actionType), 
+                Vec2(mousePos.x, mousePos.y)
+            );
+        }
+
+        if (event.type == sf::Event::Closed)
+        {
+            quit();
+        }
     }
 }
 
 void GameEngine::changeScene(const std::string & sceneName, std::shared_ptr<Scene> scene, bool endCurrentScene)
 {
-    // if ()
+    m_sceneMap[sceneName] = scene;
+    m_currentScene = sceneName;
+}
+
+void GameEngine::update()
+{
+    m_window.clear();
+	sUserInput();
+    currentScene()->sRender();
+    m_window.display();
+}
+
+const Assets& GameEngine::assets() const
+{
+	return m_assets;
+}
+
+void GameEngine::quit()
+{
+    m_running = false;
 }

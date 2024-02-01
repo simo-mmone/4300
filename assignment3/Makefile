@@ -1,7 +1,7 @@
 CXX := g++
 OUTPUT := sfmlgame
 
-SFML_DIR := .
+SFML_DIR := /usr/local/Cellar/sfml/2.6.1
 
 CXX_FLAGS := -O3 -std=c++17
 INCLUDES := -I./src -I$(SFML_DIR)/include

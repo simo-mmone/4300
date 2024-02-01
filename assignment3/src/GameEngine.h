@@ -23,7 +23,7 @@ protected:
 
     void sUserInput();
 
-    std::shared_ptr<Scene> currentScene;
+    std::shared_ptr<Scene> currentScene();
 
 public:
 

@@ -22,6 +22,7 @@ protected:
     void update();
     void onEnd();
     void sDoAction(const Action & action);
+    void sDoActionMouse(const Action & action, const Vec2 & pos);
 
 public:
 
